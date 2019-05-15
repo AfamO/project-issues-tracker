@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Welcome to HyperDev!</title>
+    <title>Welcome to Project Issue Tracker!</title>
     <meta name="description" content="A cool thing made with HyperDev">
     <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
     <meta charset="utf-8">
@@ -11,33 +11,36 @@
   </head>
   <body>
     <header>
-      <h1 id='projectTitle'></h1>
+      <h2 id='projectTitle' class="project"></h2>
     </header>
     <center>
-      <div id='submitNewIssue'>
+      <div id='submitNewIssue' class="newIssue">
         <br>
         <h3>Submit a new issue:</h3>
+        <code id='jsonResult'></code>
         <form id="newIssue" method="post" action="/api/">
-          <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required=''><br>
-          <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required=''></textarea><br>
-          <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''>
+          <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required><br>
+          <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required></textarea><br>
+          <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required>
           <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px">
           <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
           <button type="submit">Submit Issue</button>
         </form>
       </div>
-      
+
       <div id='issueDisplay'></div>
-      
+
       <hr style='margin: 50px; margin-top: 200px'>
     </center>
-    
+
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
     <script>
       $(function() {
         var currentProject = window.location.pathname.replace(/\//g, "");;
+        var currentElement=null;
+        var newIssueForm=null;
         var url = "/api/issues/"+currentProject;
         $('#projectTitle').text('All issues for: '+currentProject)
         $.ajax({
@@ -55,21 +58,21 @@
                 '<p class="id">id: '+ele._id+'</p>',
                 '<h3>'+ele.issue_title+' -  ('+openstatus+')</h3>',
                 '<br>',
-                '<p>'+ele.issue_text+'</p>',
-                '<p>'+ele.status_text+'</p>',
+                '<p class="text">'+ele.issue_text+'</p>',
+                '<p class="text">'+ele.status_text+'</p>',
                 '<br>',
                 '<p class="id"><b>Created by:</b> '+ele.created_by+'  <b>Assigned to:</b> '+ele.assigned_to,
                 '<p class="id"><b>Created on:</b> '+ele.created_on+'  <b>Last updated:</b> '+ele.updated_on,
-                '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
+                '<br><a href="#" class="closeIssue" id="'+ele._id+'">Close?</a> <a href="#" class="updateIssue"  id="'+ele._id+'">Update?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">Delete?</a>',
                 '</div>'
-                
               ];
+
               issues.push(single.join(''));
             });
             $('#issueDisplay').html(issues.join(''));
           }
         });
-        
+
         $('#newIssue').submit(function(e){
           e.preventDefault();
           $(this).attr('action', "/api/issues/" + currentProject);
@@ -80,28 +83,97 @@
             success: function(data) { window.location.reload(true); }
           });
         });
-        
-        $('#issueDisplay').on('click','.closeIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
+        $('#updateIssue').submit(function(e){
+          e.preventDefault();
+          $(this).attr('action', "/api/issues/" + currentProject);
           $.ajax({
             type: "PUT",
             url: url,
-            data: {_id: $(this).attr('id'), open: false},
-            success: function(data) { alert(data); window.location.reload(true); }
+            data: $(this).serialize(),
+            success: function(data) {
+              if(data.status==200){
+                $('#jsonResult').html("Successfully updated issue");
+                alert("Successfully updated issue");
+                window.location.reload(true);
+              $('#jsonResult').html("Successfully updated issue");
+              }
+              else{
+                alert(data.msg);
+              }
+             }
           });
+        });
+
+        $('#issueDisplay').on('click','.closeIssue', function(e) {
+          var url = "/api/issues/"+currentProject;
+          if(confirm("Are you sure you want to close this "+currentProject.toUpperCase()+" issue with id: "+$(this).attr('id')+" \n?"))
+          {
+            var issueId=$(this).attr('id');
+            $.ajax({
+              type: "PUT",
+              url: url,
+              data: {_id: $(this).attr('id'), open: false},
+              success: function(data) {
+                if(data.status==200)
+                {
+                  alert("Successfully closed issue with id "+issueId);
+                  window.location.reload(true);
+                }
+                else{
+                  alert(data.msg);
+                }
+
+              }
+            });
+          }
           e.preventDefault();
         });
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
+          if(confirm("Are you sure you want to delete this "+currentProject.toUpperCase()+" issue with id: "+$(this).attr('id')+" \n?")){
+            $.ajax({
+              type: "DELETE",
+              url: url,
+              data: {_id: $(this).attr('id')},
+              success: function(data) { alert(data.msg+" issue"); window.location.reload(true); }
+            });
+          }
+          e.preventDefault();
+        });
+        $('#issueDisplay').on('click','.updateIssue', function(e) {
+          var url = "/api/issues/"+currentProject;
           $.ajax({
-            type: "DELETE",
+            type: "GET",
             url: url,
             data: {_id: $(this).attr('id')},
-            success: function(data) { alert(data); window.location.reload(true); }
+            success: function(data) {
+              newIssueForm='<input type="hidden" id="_id" name="_id" value="'+data._id+'" placeholder="*Id" required><br><input type="text" name="issue_title" value="'+data.issue_title+'" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required><br>'
+              newIssueForm+='<textarea type="text" name="issue_text"   placeholder="*Text" style="width: 320px; height: 100px;" required>'+data.issue_text+'</textarea><br>'
+              newIssueForm+='<input type="text" name="created_by" value="'+data.created_by+'" placeholder="*Created by" style="width: 100px" required> <input type="text" name="assigned_to" value="'+data.assigned_to+'" placeholder="(opt)Assigned to" style="width: 100px"><input type="text" name="status_text" value="'+data.status_text+'" placeholder="(opt)Status text" style="width: 100px"><br><button type="submit">Update Issue</button>'
+              $('#updateIssue').html(newIssueForm);
+              $('#updateMsgHeader').html('Update issue on <i>'+currentProject+'</i> (Change any or all to update issue on the _id supplied)')
+              window.location="#update";
+            }
           });
           e.preventDefault();
         });
+
       });
    </script>
+   <div id='testui' >
+     <h2 style="text-align: left"></h2>
+
+     <section id="update">
+       <h3 id="updateMsgHeader"></h3>
+       <form id="updateIssue" class="border" method="PUT">
+       </form>
+     </section>
+   </div>
+   <hr style='margin: 50px; margin-top: 200px'>
+   <!-- Your web-app is https, so your scripts need to be too -->
+   <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+           integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+           crossorigin="anonymous"></script>
+
   </body>
 </html>
