@@ -8,7 +8,7 @@ All tests passed. Both client and server working as expected.
 
 If you want to try the converter, open [this link on Glitch](https://afamo-issue-tracker.glitch.me//).
 
-##### User Stories
+##### User Stories 
 
 1) Prevent cross site scripting(XSS attack).
 2) I can `POST` /api/issues/{projectname} with form data containing required issue_title, issue_text, created_by, and optional assigned_to and status_text.
