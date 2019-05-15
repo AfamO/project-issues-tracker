@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to Issue Tracker!</title>
+    <meta name="description" content="A cool thing made with HyperDev">
+    <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+  <body>
+    <header>
+      <img src="https://d33wubrfki0l68.cloudfront.net/4ba4ee4d1ac4caf5c0c3fa44ccc8fddd5bd11222/3f5b1/img/freecodecamp-alternative.png" alt="FreeCodeCamp Logo">
+
+      <h1 id="title">
+       Project Issue Tracker
+      </h1>
+    </header>
+    <div id="projects">
+      <h4>Example Projects</h4>
+      <h6>Click on any to test and try it out</h6>
+      <ul class="projects-lists">
+        <li><a id="link" href='/apitest/'><i>Apitest</i> project issues</a></li>
+        <li><a href='/test/'><i>Functional Test</i> project issues</a></li>
+        <li><a href='/mypro/'><i>MyPro</i> project issues</a></li>
+      </ul>
+    </div>
+    <div id='dd' class="examples-usages" >
+
+      <div id="examples">
+        <h3>Usages:</h3>
+        <code>/api/issues/{project}</code><br>
+        <code>/api/issues/{project}?open=true&amp;assigned_to=Joe</code><br>
+      </div>
+      <div id="return" class="return">
+        <h3>Return:</h3>
+        <code>[{"_id":"5871dda29faedc3491ff93bb","issue_title":"Fix error in posting data","issue_text":"When we post data it has an error.","created_on":"2017-01-08T06:35:14.240Z","updated_on":"2017-01-08T06:35:14.240Z","created_by":"Joe","assigned_to":"Joe","open":true,"status_text":"In QA"},...]</code>
+      </div>
+
+    </div>
+
+    <hr>
+    <footer id="footer" class="container-fluid">
+        <p>qlip © 2019. All Rights Reserved
+            By <a href="https://ng.linkedin.com/in/okonkwo-afam-14103b84">AfamO</a>
+        </p>
+    </footer>
+  </body>
+</html>
