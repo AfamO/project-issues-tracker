@@ -57,24 +57,25 @@ color: #2C3E50;
   text-align: center;
 }
 .examples-usages{
-  text-align: center;
+  text-align:center;
   display:flex;
   flex-direction: row;
   justify-content: space-evenly;
   background: lightgray;
-  height: 10em;
+  height: 13em;
   margin-top: 2em;
   border: 0.1em solid lightgray;
   border-radius: 10px;
 }
 #examples{
   margin-left: 0em;
-  width: 50%;
+  width: 90%;
   margin-top: 1.5em;
 }
 .return{
   margin-left: 0em;
   margin-top: 1.5em;
+  width:54%;
 }
 
 #testui{
@@ -152,3 +153,48 @@ ul{
     padding:0.1em;
     text-align: center;
   }
+@media(max-width:520px){
+
+.examples-usages{
+  text-align: center;
+  display:block;
+  background: lightgray;
+  height: 27em;
+  margin-top: -8em;
+  border: 0.1em solid lightgray;
+  border-radius: 10px;
+}
+  #examples{
+  width: 100%;
+}
+.return{
+  margin-left: 0em;
+  margin-top: 1.5em;
+  width:100%;
+}
+  button{
+
+    width:80%;
+  }
+  .issue {
+  margin: 20px;
+  padding: 5px;
+  width: 95%;
+  border: 2px solid black;
+}
+
+  ul{
+  margin-left: 15%;
+  margin-right: 15%;
+}
+h6,h4{
+margin-top:0.1em;
+font-size: 1em;
+}
+  #title{
+  font-size: 2em;
+}
+  #projects{
+  height: 29em;
+}
+}
