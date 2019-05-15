@@ -1,7 +1,7 @@
 **FreeCodeCamp/AfamO**- Information Security and Quality Assurance Project
 ------
 
-##Project Issue Tracker
+## Project Issue Tracker
 All tests passed. Both client and server working as expected.
 
 #### Try it out!
